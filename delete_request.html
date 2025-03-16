@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form di inserimento</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="mainContent">
+        <h1>Inserisci Il Codice Fiscale dello studente da eliminare</h1>
+        <form action="deleteFromDB" method="post">
+            <div>
+                <label for="1">Codice Fiscale:</label>
+                <input type="text" name="CF" id="1" minlength="16" maxlength="16">
+
+                <button type="submit">Invia</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
