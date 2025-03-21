@@ -11,7 +11,7 @@ app.use(express.static(__dirname));
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 
-const env = nunjucks.configure(__dirname, {
+const env = nunjucks.configure("views", {
     autoescape: true,
     express: app,
 });
