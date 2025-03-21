@@ -1,6 +1,7 @@
 const dotenv = require("dotenv");
 const express = require("express");
 const mysql = require("mysql2"); 
+const nunjucks = require("nunjucks");
 
 dotenv.config();
 let PORT = process.env.PORT || 5000;
@@ -9,6 +10,12 @@ const app = express();
 app.use(express.static(__dirname));
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
+
+const env = nunjucks.configure(__dirname, {
+    autoescape: true,
+    express: app,
+});
+
 
 const pool = mysql.createPool({
     connectionLimit: 10,
@@ -79,5 +86,5 @@ app.listen(PORT, () => {
 })
 
 app.get("/", (req, res) => {
-    res.sendFile(__dirname + "/index.html");
+    res.render(__dirname + "/index.html");
 })

@@ -1,12 +1,12 @@
 window.addEventListener("DOMContentLoaded", e => {
     const [insertBtn, deleteBtn] = document.querySelectorAll("button");
     const SelectDB = document.querySelector("select");
-    const table = document.getElementById("DB_display");
+    const tableDisplay = document.getElementById("DB_display");
 
     const buildHTMLTable = data => {
-        const tableFieldNumber = Object.keys(data[0]).length;
-        console.log(tableFieldNumber);
-
+        const columnNumber = Object.keys(data[0]).length;
+        console.log(columnNumber);
+        
         let HTMLTable = `<table>
         <tr>
             <th>CF</th>
@@ -31,8 +31,7 @@ window.addEventListener("DOMContentLoaded", e => {
             HTMLTable += HTMLRow;
         });
 
-        HTMLTable += "</table>"
-        console.log(HTMLTable);
+        HTMLTable += "\n</table>"
         return HTMLTable;
     }
 
@@ -41,7 +40,7 @@ window.addEventListener("DOMContentLoaded", e => {
         .then(response => response.json())
         .then(message => {
             console.log(message);
-            table.innerHTML = buildHTMLTable(message);
+            tableDisplay.innerHTML = buildHTMLTable(message);
         })
         .catch(err => console.error(err))
     }
