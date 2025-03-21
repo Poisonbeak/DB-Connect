@@ -7,7 +7,7 @@ body{
 #mainContent{
     text-align: center;
 }
-button{
+button, select{
     font-size: 20px;
 }
 div{

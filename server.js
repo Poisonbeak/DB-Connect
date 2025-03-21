@@ -18,13 +18,15 @@ const pool = mysql.createPool({
     database: "scuola",
 });
 
-app.get("/loadDB", (req, res) => {
+app.get("/loadDB/:table", (req, res) => {
+    const table = req.params.table;
+
     pool.getConnection((err, conn) => {
         if (err) throw err;
 
-        conn.query(`SELECT * FROM studente`,
+        conn.query(`SELECT * FROM ${table}`,
         (error, results, fields) => {
-            // console.log(results);
+            console.log(results);
             res.status(200).send(JSON.stringify(results));
 
             conn.release();

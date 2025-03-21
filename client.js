@@ -1,8 +1,12 @@
 window.addEventListener("DOMContentLoaded", e => {
     const [insertBtn, deleteBtn] = document.querySelectorAll("button");
+    const SelectDB = document.querySelector("select");
     const table = document.getElementById("DB_display");
 
     const buildHTMLTable = data => {
+        const tableFieldNumber = Object.keys(data[0]).length;
+        console.log(tableFieldNumber);
+
         let HTMLTable = `<table>
         <tr>
             <th>CF</th>
@@ -27,11 +31,13 @@ window.addEventListener("DOMContentLoaded", e => {
             HTMLTable += HTMLRow;
         });
 
+        HTMLTable += "</table>"
+        console.log(HTMLTable);
         return HTMLTable;
     }
 
-    const DBRequest = () => {
-        fetch("http://localhost:5000/loadDB")
+    const DBRequest = (table = "studente") => {
+        fetch(`http://localhost:5000/loadDB/${table}`)
         .then(response => response.json())
         .then(message => {
             console.log(message);
@@ -40,6 +46,11 @@ window.addEventListener("DOMContentLoaded", e => {
         .catch(err => console.error(err))
     }
     DBRequest();
+
+    SelectDB.addEventListener("change", e => {
+        const selectedTable = SelectDB.value;
+        DBRequest(selectedTable);
+    })
 
     insertBtn.addEventListener("click", e => {
         console.log(`Click on ${e.target.innerText}`);
