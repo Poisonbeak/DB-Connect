@@ -10,27 +10,26 @@ app.use(express.static(__dirname));
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 
-const con = mysql.createConnection({
+const pool = mysql.createPool({
+    connectionLimit: 10,
     host: "localhost",
     user: "root",
     password: "",
     database: "scuola",
 });
 
-con.connect(err => {
-    if (err)
-        console.error(`error connnecting: ${err.stack}`);
-    else
-        console.log(`connected as id ${con.threadId}`);
-})
-
 app.get("/loadDB", (req, res) => {
-    con.query(`SELECT * FROM studente`,
-    (error, results, fields) => {
-        if (error) { throw error; }
-        
-        // console.log(results);
-        res.status(200).send(JSON.stringify(results));
+    pool.getConnection((err, conn) => {
+        if (err) throw err;
+
+        conn.query(`SELECT * FROM studente`,
+        (error, results, fields) => {
+            // console.log(results);
+            res.status(200).send(JSON.stringify(results));
+
+            conn.release();
+            if (error) throw error;
+        })
     })
 });
 
@@ -43,13 +42,16 @@ app.get("/delete", (req, res) => {
 
 app.post("/updateDB", (req, res) => {
     const data = req.body;
-    console.log(data);
-    
     const {CF, Nome, Cognome, Età, Telefono, IDClasse} = data;
 
-    con.query(`INSERT INTO studente VALUES('${CF}', '${Nome}', '${Cognome}', ${Età}, '${Telefono}', ${IDClasse})`,
-    (error, results, fields) => {
-        if (error) { throw error; }
+    pool.getConnection((err, conn) => {
+        if (err) throw err;
+        
+        conn.query(`INSERT INTO studente VALUES('${CF}', '${Nome}', '${Cognome}', ${Età}, '${Telefono}', ${IDClasse})`,
+        (error, results, fields) => {
+            conn.release();
+            if (error) throw error;
+        })
     })
     res.status(200).redirect("/");
 })
@@ -57,9 +59,14 @@ app.post("/deleteFromDB", (req, res) => {
     const data = req.body;
     console.log(data);
 
-    con.query(`DELETE FROM studente WHERE CF = '${data.CF}'`,
-    (error, results, fields) => {
-        if (error) { throw error; }
+    pool.getConnection((err, conn) => {
+        if (err) throw err;
+        
+        conn.query(`DELETE FROM studente WHERE CF = '${data.CF}'`,
+        (error, results, fields) => {
+            conn.release();
+            if (error) throw error;
+        })
     })
     res.status(200).redirect("/");
 })
